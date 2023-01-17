@@ -10,9 +10,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  static const initialSeconds = 1500;
+  static const initialSeconds = 3;
+  static const initialPomodoros = 0;
   int totalSeconds = initialSeconds;
-  int totalPomodoros = 0;
+  int totalPomodoros = initialPomodoros;
 
   bool isRunning = false;
   bool isPause = true;
@@ -53,12 +54,18 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void onRestPressed() {
+  void onResetPressed() {
     timer.cancel();
     setState(() {
       isRunning = false;
-      isPause = !isPause;
+      isPause = !isRunning;
       totalSeconds = initialSeconds;
+    });
+  }
+
+  void onPomodoroResetPressed() {
+    setState(() {
+      totalPomodoros = initialPomodoros;
     });
   }
 
@@ -118,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       IconButton(
-                        onPressed: onRestPressed,
+                        onPressed: onResetPressed,
                         iconSize: 120,
                         color: Theme.of(context).cardColor,
                         icon: const Icon(
@@ -138,24 +145,43 @@ class _HomeScreenState extends State<HomeScreen> {
                       borderRadius: BorderRadius.circular(50),
                       color: Theme.of(context).cardColor,
                     ),
-                    child: Column(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          "Pomodoros",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Theme.of(context).textTheme.headline1!.color,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Text(
-                          "$totalPomodoros",
-                          style: TextStyle(
-                            fontSize: 58,
-                            color: Theme.of(context).textTheme.headline1!.color,
-                            fontWeight: FontWeight.w600,
-                          ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Pomodoros",
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .headline1!
+                                    .color,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              "$totalPomodoros",
+                              style: TextStyle(
+                                fontSize: 58,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .headline1!
+                                    .color,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            isPause
+                                ? IconButton(
+                                    onPressed: onPomodoroResetPressed,
+                                    icon: const Icon(
+                                      Icons.cancel,
+                                    ),
+                                  )
+                                : Column()
+                          ],
                         ),
                       ],
                     ),
